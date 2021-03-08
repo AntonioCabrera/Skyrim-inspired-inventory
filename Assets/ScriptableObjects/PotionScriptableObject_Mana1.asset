@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a2670c1253ca342b58d629402d7699, type: 3}
+  m_Name: PotionScriptableObject_Mana1
+  m_EditorClassIdentifier: 
+  ItemType: 2
+  ItemName: Worst mana potion
+  ItemWeight: 0.2
+  ItemDescription: The worst potion you could ingest
+  ItemIsQuestItem: 0
+  ItemIsEquipable: 0
+  ItemIsUsable: 1
+  ConsumableTextAction: Drink
+  ItemObjectVisualizationInUI: {fileID: 1098475621808949659, guid: e83bf4b0a2bbd3f4d8cb7aa87a17928b,
+    type: 3}
+  ItemPrefab: {fileID: 8367192172896068296, guid: 3626c47c7ff2f384fb5a316a8f4cfa07,
+    type: 3}
+  ItemValue: 5
+  ProvisionalPotionEffect: 5
+  PotionText: Get some mana!

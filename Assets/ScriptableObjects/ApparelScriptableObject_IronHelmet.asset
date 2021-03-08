@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0324347db72f9464889b159a641a5d7c, type: 3}
+  m_Name: ApparelScriptableObject_IronHelmet
+  m_EditorClassIdentifier: 
+  ItemType: 1
+  ItemName: Iron Helmet
+  ItemWeight: 2
+  ItemDescription: A rusty helmet made of iron
+  ItemIsQuestItem: 0
+  ItemIsEquipable: 1
+  ItemIsUsable: 0
+  ConsumableTextAction: 
+  ItemObjectVisualizationInUI: {fileID: 4058757020817565502, guid: 32c997032a766e3458a7a5c15f08f832,
+    type: 3}
+  ItemPrefab: {fileID: 1408233407082290418, guid: e4719ca2aaf40784ab661590c091ad45,
+    type: 3}
+  ItemValue: 15
+  Armor: 20

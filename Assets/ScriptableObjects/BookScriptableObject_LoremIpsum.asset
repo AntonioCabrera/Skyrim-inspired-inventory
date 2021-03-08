@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ce850b7e84af994db8fd7a99834da76, type: 3}
+  m_Name: BookScriptableObject_LoremIpsum
+  m_EditorClassIdentifier: 
+  ItemType: 5
+  ItemName: Lorem Ipsum
+  ItemWeight: 0.5
+  ItemDescription: A book with a message everyone's knows
+  ItemIsQuestItem: 0
+  ItemIsEquipable: 0
+  ItemIsUsable: 1
+  ConsumableTextAction: Read
+  ItemObjectVisualizationInUI: {fileID: 9173893462567376536, guid: b692793d466417748881817323815b09,
+    type: 3}
+  ItemPrefab: {fileID: 3123756154021970048, guid: 54f63bad7f05dab46b15cd6dc4d55f7e,
+    type: 3}
+  ItemValue: 50
+  IsReadable: 1
+  ReadableText: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+    eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+    veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+    dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+    sunt in culpa qui officia deserunt mollit anim id est laborum."'

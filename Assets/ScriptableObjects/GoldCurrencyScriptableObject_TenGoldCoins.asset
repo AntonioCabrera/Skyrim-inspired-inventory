@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baf0fad18c0a4114a9b3ef1b25b21a8c, type: 3}
+  m_Name: GoldCurrencyScriptableObject_TenGoldCoins
+  m_EditorClassIdentifier: 
+  ItemType: 8
+  ItemName: 10 coins of gold
+  ItemWeight: 0
+  ItemDescription: 
+  ItemIsQuestItem: 0
+  ItemIsEquipable: 0
+  ItemIsUsable: 0
+  ConsumableTextAction: 
+  ItemObjectVisualizationInUI: {fileID: 6053376956242611324, guid: ea30845b18eb94f42bf8a93554e9e73c,
+    type: 3}
+  ItemPrefab: {fileID: 1245360140264303583, guid: 2c49b4b9bc350f146acc7e793023ec57,
+    type: 3}
+  ItemValue: 10
+  currencyAmmount: 10

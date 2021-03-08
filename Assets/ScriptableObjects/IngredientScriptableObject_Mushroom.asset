@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e2152accee9af048bd1600336a35735, type: 3}
+  m_Name: IngredientScriptableObject_Mushroom
+  m_EditorClassIdentifier: 
+  ItemType: 4
+  ItemName: Mushroom
+  ItemWeight: 0.3
+  ItemDescription: Just a mushroom
+  ItemIsQuestItem: 0
+  ItemIsEquipable: 0
+  ItemIsUsable: 1
+  ConsumableTextAction: Eat
+  ItemObjectVisualizationInUI: {fileID: 1845338095121141955, guid: b774fc28b680719469266e76129de192,
+    type: 3}
+  ItemPrefab: {fileID: 6271427742785207308, guid: 1c5ba22a5c94b3f42b3c26a9df06b718,
+    type: 3}
+  ItemValue: 50
+  CanBeIngested: 0

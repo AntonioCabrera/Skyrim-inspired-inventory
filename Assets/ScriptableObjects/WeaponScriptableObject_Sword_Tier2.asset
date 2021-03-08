@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98ced3d6be6331a418bfda37d5682d16, type: 3}
+  m_Name: WeaponScriptableObject_Sword_Tier2
+  m_EditorClassIdentifier: 
+  ItemType: 0
+  ItemName: A really heavy sword
+  ItemWeight: 20
+  ItemDescription: A sword that actually does some damage
+  ItemIsQuestItem: 0
+  ItemIsEquipable: 1
+  ItemIsUsable: 0
+  ConsumableTextAction: 
+  ItemObjectVisualizationInUI: {fileID: 3182556155087869320, guid: a006feaa86daa04489fc07aaa35a21dc,
+    type: 3}
+  ItemPrefab: {fileID: 1526358914673329146, guid: 2a1fc042342ea47438559a759fa73e12,
+    type: 3}
+  ItemValue: 100
+  Damage: 10
