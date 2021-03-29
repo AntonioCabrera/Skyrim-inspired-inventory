@@ -21,9 +21,17 @@ public class InputManager : MonoBehaviour
     private Rigidbody myRigidbody;
     private MouseLookAt mouseLookAt;
 
-    void Start()
+    void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(Instance);
+        }
+        else
+        {
         Instance = this;
+        }
+
         CanMove = true;
         myRigidbody = gameObject.GetComponent<Rigidbody>();
         mouseLookAt = gameObject.GetComponentInChildren<MouseLookAt>();
@@ -38,6 +46,7 @@ public class InputManager : MonoBehaviour
                 InventoryManager.Instance.TryPickUpCurrentItem();
             }
         }
+
         if (Input.GetKeyDown(InventoryOpenCloseKey))
         {
             if (UIManager.Instance.InventoryUI.activeSelf)

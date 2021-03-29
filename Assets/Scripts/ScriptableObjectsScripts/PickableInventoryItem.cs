@@ -11,6 +11,7 @@ public class PickableInventoryItem : ScriptableObject
     public bool ItemIsQuestItem;
     public bool ItemIsEquipable;
     public bool ItemIsUsable;
+    public bool ItemIsReUsable;
     public string ConsumableTextAction;
     public GameObject ItemObjectVisualizationInUI;
     public GameObject ItemPrefab;

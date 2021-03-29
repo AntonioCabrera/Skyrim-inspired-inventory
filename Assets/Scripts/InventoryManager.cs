@@ -7,17 +7,26 @@ public class InventoryManager : MonoBehaviour
 
     public static InventoryManager Instance;
     public float MaxCarryCapacity;
+    public GameObject DropableArea;
 
     [HideInInspector]
     public float CurrentCarryCapacity;
     [HideInInspector]
     public float CurrentGold;
     [HideInInspector]
-    public Dictionary<InventoryItemTypes, List<PickableInventoryItem>> InventoryDictionary;
+    public Dictionary<InventoryItemTypes, List<ItemScript>> InventoryDictionary;
+
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance != null)
+        {
+            Destroy(Instance);
+        }
+        else
+        {
+            Instance = this;
+        }
         InitializeInventoryDictionaries();
     }
 
@@ -26,20 +35,20 @@ public class InventoryManager : MonoBehaviour
     {
         int inventoryItemTypesLenght = Enum.GetNames(typeof(InventoryItemTypes)).Length;
 
-        InventoryDictionary = new Dictionary<InventoryItemTypes, List<PickableInventoryItem>>();
+        InventoryDictionary = new Dictionary<InventoryItemTypes, List<ItemScript>>();
         for (int i = 0; i < inventoryItemTypesLenght; i++)
         {
-            List<PickableInventoryItem> list = new List<PickableInventoryItem>();
+            List<ItemScript> list = new List<ItemScript>();
             InventoryDictionary.Add((InventoryItemTypes)i, list);
         }
     }
 
-    public bool AddItemToInventory(PickableInventoryItem item)
+    public bool AddItemToInventory(ItemScript item)
     {
-        if (item.ItemWeight + CurrentCarryCapacity < MaxCarryCapacity)
+        if (item.ScriptableItem.ItemWeight + CurrentCarryCapacity < MaxCarryCapacity)
         {
-            InventoryDictionary[item.ItemType].Add(item);
-            CurrentCarryCapacity += item.ItemWeight;
+            InventoryDictionary[item.ScriptableItem.ItemType].Add(item);
+            CurrentCarryCapacity += item.ScriptableItem.ItemWeight;
             return true;
         }
         else
@@ -48,7 +57,22 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    public void AddGoldCurrency (int amount)
+    public void RemoveItemFromInventory(ItemScript item)
+    {
+        CurrentCarryCapacity -= item.ScriptableItem.ItemWeight;
+        foreach (var ownedItem in InventoryDictionary[item.ScriptableItem.ItemType])
+        {
+            if (ownedItem.ScriptableItem.ItemName.Equals(item.ScriptableItem.ItemName))
+            {
+                InventoryDictionary[item.ScriptableItem.ItemType].Remove(ownedItem);
+                return;
+            }
+        }
+        UIManager.Instance.InventoryCarryWeightText.text = "Current / Max Weight: " + CurrentCarryCapacity.ToString("F2") + " / " + MaxCarryCapacity.ToString("F2");
+
+    }
+
+    public void AddGoldCurrency(int amount)
     {
         CurrentGold += amount;
     }
@@ -75,7 +99,7 @@ public class InventoryManager : MonoBehaviour
                 GoldCurrencyScriptableObject g = (GoldCurrencyScriptableObject)RaycastManager.Instance.CurrentObjectRaycasted.ScriptableItem;
                 AddGoldCurrency(g.currencyAmmount);
             }
-            if (AddItemToInventory(RaycastManager.Instance.CurrentObjectRaycasted.ScriptableItem))
+            if (AddItemToInventory(RaycastManager.Instance.CurrentObjectRaycasted))
             {
                 Destroy(RaycastManager.Instance.CurrentObjectRaycasted.gameObject);
             }
@@ -83,24 +107,26 @@ public class InventoryManager : MonoBehaviour
 
     }
 
-    public void UseItem (PickableInventoryItem item)
+    public void UseItem(ItemScript item)
     {
-        if(item.ItemType == InventoryItemTypes.Book)
-        {
-            //todo implementation for UIManager onClick
-        }
+        item.InventoryUseAction();
     }
 
-    public void DropItem(PickableInventoryItem item)
+    public void DropItem(ItemScript item)
     {
-        //todo implementation for UIManager onClick
-
+        GameObject dropped = Instantiate(item.ScriptableItem.ItemPrefab, DropableArea.transform, false);
+        dropped.transform.position += new Vector3(UnityEngine.Random.insideUnitCircle.x / 2, 0, UnityEngine.Random.insideUnitCircle.y / 2);
+        dropped.transform.SetParent(null);
+        RemoveItemFromInventory(item);
+        UIManager.Instance.RepeatedItemControlDecrease(item);
+        UIManager.Instance.UpdateItemButtonAmount(item);
     }
 
-    public void EquipItem(PickableInventoryItem item)
-    {
-        //todo implementation for UIManager onClick
 
+
+    public void EquipItem(ItemScript item)
+    {
+        item.InventoryUseAction();
     }
 
 }

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e2152accee9af048bd1600336a35735, type: 3}
+  m_Name: IngredientScriptableObject_GoldOre
+  m_EditorClassIdentifier: 
+  ItemType: 4
+  ItemName: Gold Ore
+  ItemWeight: 0.3
+  ItemDescription: Shiny gold ore
+  ItemIsQuestItem: 0
+  ItemIsEquipable: 0
+  ItemIsUsable: 0
+  ItemIsReUsable: 0
+  ConsumableTextAction: 
+  ItemObjectVisualizationInUI: {fileID: 1845338095121141955, guid: b4720c1ba26453e4cb71ef4e4c588063,
+    type: 3}
+  ItemPrefab: {fileID: 6271427742785207308, guid: e659445a5bb43aa4e857e689c11ec654,
+    type: 3}
+  ItemValue: 50
+  CanBeIngested: 0

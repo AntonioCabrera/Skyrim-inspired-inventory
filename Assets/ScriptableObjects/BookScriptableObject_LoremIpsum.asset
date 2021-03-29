@@ -19,6 +19,7 @@ MonoBehaviour:
   ItemIsQuestItem: 0
   ItemIsEquipable: 0
   ItemIsUsable: 1
+  ItemIsReUsable: 1
   ConsumableTextAction: Read
   ItemObjectVisualizationInUI: {fileID: 9173893462567376536, guid: b692793d466417748881817323815b09,
     type: 3}

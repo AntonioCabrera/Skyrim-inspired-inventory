@@ -19,6 +19,7 @@ MonoBehaviour:
   ItemIsQuestItem: 0
   ItemIsEquipable: 0
   ItemIsUsable: 1
+  ItemIsReUsable: 0
   ConsumableTextAction: Drink
   ItemObjectVisualizationInUI: {fileID: 1098475621808949659, guid: e83bf4b0a2bbd3f4d8cb7aa87a17928b,
     type: 3}

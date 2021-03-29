@@ -39,25 +39,33 @@ public class UIManager : MonoBehaviour
 
     private List<GameObject> inventoryTypesListButtonPrefabs;
     private List<GameObject> inventoryBottomBarButtons;
-    private Dictionary<string, int> repeatedItemsNumberControl;
-    private Dictionary<string, GameObject> inventoryItemsListButtonPrefabs;
+    public Dictionary<string, GameObject> InventoryItemsListButtonPrefabs;
     private GameObject currentInventoryItemInfoVisualization;
 
+    [HideInInspector]
+    public Dictionary<string, int> RepeatedItemsNumberControl;
     [HideInInspector]
     public bool inventoryIsReadyToOpenAgain = true;
 
     private void Awake()
     {
-        Instance = this;
+        if (Instance != null)
+        {
+            Destroy(Instance);
+        }
+        else
+        {
+            Instance = this;
+        }
         inventoryBottomBarButtons = new List<GameObject>();
         inventoryTypesListButtonPrefabs = new List<GameObject>();
-        inventoryItemsListButtonPrefabs = new Dictionary<string, GameObject>();
-        repeatedItemsNumberControl = new Dictionary<string, int>();
+        InventoryItemsListButtonPrefabs = new Dictionary<string, GameObject>();
+        RepeatedItemsNumberControl = new Dictionary<string, int>();
     }
 
     public void OpenMainInventory()
     {
-        UpdateInventoryUI();
+        LoadInventoryUI();
         InventoryUI.SetActive(true);
     }
 
@@ -76,7 +84,7 @@ public class UIManager : MonoBehaviour
         inventoryIsReadyToOpenAgain = true;
     }
 
-    public void UpdateInventoryUI()
+    public void LoadInventoryUI()
     {
         UpdateGoldCurrencyUIText();
         UpdateInventoryTypePanel();
@@ -89,13 +97,18 @@ public class UIManager : MonoBehaviour
         InventoryCarryWeightText.text = "Current / Max Weight: " + InventoryManager.Instance.CurrentCarryCapacity.ToString("F2") + " / " + InventoryManager.Instance.MaxCarryCapacity.ToString("F2");
     }
 
+    public void UpdateGoldCurrencyUIText()
+    {
+        InventoryGoldCurrencyText.text = "Gold: " + InventoryManager.Instance.CurrentGold.ToString();
+    }
+
     public void UpdateInventoryTypePanel()
     {
         inventoryTypesListButtonPrefabs.Clear();
         int inventoryTypesButtonCountIndex = 0;
         for (int i = 0; i < InventoryManager.Instance.InventoryDictionary.Count; i++)
         {
-            if (InventoryManager.Instance.InventoryDictionary[(InventoryItemTypes)i].Count != 0 && InventoryManager.Instance.InventoryDictionary[(InventoryItemTypes)i][0].ItemType != InventoryItemTypes.GoldCurrency)
+            if (InventoryManager.Instance.InventoryDictionary[(InventoryItemTypes)i].Count != 0 && InventoryManager.Instance.InventoryDictionary[(InventoryItemTypes)i][0].ScriptableItem.ItemType != InventoryItemTypes.GoldCurrency)
             {
                 inventoryTypesListButtonPrefabs.Add(IncrementalPools.Instance.GetObjectFromPool(PoolTypes.InventoryItemButton.ToString()));
                 GameObject go = inventoryTypesListButtonPrefabs[inventoryTypesButtonCountIndex];
@@ -118,45 +131,38 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void UpdateGoldCurrencyUIText()
+    public void SetInventoryTypeButtonListener(Button.ButtonClickedEvent onClick, List<ItemScript> itemList)
     {
-        InventoryGoldCurrencyText.text = "Gold: " + InventoryManager.Instance.CurrentGold.ToString();
-    }
-
-    public void SetInventoryTypeButtonListener(Button.ButtonClickedEvent onClick, List<PickableInventoryItem> itemList)
-    {
-        itemList = itemList.OrderBy(go => go.name).ToList();
+        itemList = itemList.OrderBy(go => go.ScriptableItem.name).ToList();
         onClick.AddListener(delegate { OnInventoryTypeButtonClick(itemList); });
     }
 
-    public void OnInventoryTypeButtonClick(List<PickableInventoryItem> itemList)
+    public void OnInventoryTypeButtonClick(List<ItemScript> itemList)
     {
         InventoryItemInfoVisualizationPanel.SetActive(false);
         ReturnBottomBarButtonsToPool();
 
-        foreach (var inventoryItemButton in inventoryItemsListButtonPrefabs)
+        foreach (var inventoryItemButton in InventoryItemsListButtonPrefabs)
         {
             IncrementalPools.Instance.ReturnObjectToPool(PoolTypes.InventoryItemButton.ToString(), inventoryItemButton.Value);
         }
-        inventoryItemsListButtonPrefabs.Clear();
+        InventoryItemsListButtonPrefabs.Clear();
 
-        repeatedItemsNumberControl.Clear();
+        RepeatedItemsNumberControl.Clear();
         foreach (var item in itemList)
         {
-            if (repeatedItemsNumberControl.ContainsKey(item.ItemName))
+            if (RepeatedItemsNumberControl.ContainsKey(item.ScriptableItem.ItemName))
             {
-                GameObject pooledButton;
-                repeatedItemsNumberControl[item.ItemName]++;
-                inventoryItemsListButtonPrefabs.TryGetValue(item.ItemName, out pooledButton);
-                pooledButton.GetComponentInChildren<TextMeshProUGUI>().text = item.ItemName + "(" + repeatedItemsNumberControl[item.ItemName] + ")";
+                RepeatedItemsNumberControl[item.ScriptableItem.ItemName]++;
+                UpdateItemButtonAmount(item);
             }
             else
             {
                 GameObject pooledButton = IncrementalPools.Instance.GetObjectFromPool(PoolTypes.InventoryItemButton.ToString());
-                pooledButton.GetComponentInChildren<TextMeshProUGUI>().text = item.ItemName;
+                pooledButton.GetComponentInChildren<TextMeshProUGUI>().text = item.ScriptableItem.ItemName;
                 pooledButton.transform.SetParent(InventoryItemPanelContent);
-                inventoryItemsListButtonPrefabs.Add(item.ItemName, pooledButton);
-                repeatedItemsNumberControl.Add(item.ItemName, 1);
+                InventoryItemsListButtonPrefabs.Add(item.ScriptableItem.ItemName, pooledButton);
+                RepeatedItemsNumberControl.Add(item.ScriptableItem.ItemName, 1);
                 SetInventoryItemButtonListener(pooledButton.GetComponentInChildren<Button>().onClick, item);
             }
         }
@@ -164,12 +170,13 @@ public class UIManager : MonoBehaviour
 
     }
 
-    public void SetInventoryItemButtonListener(Button.ButtonClickedEvent onClick, PickableInventoryItem item)
+
+    public void SetInventoryItemButtonListener(Button.ButtonClickedEvent onClick, ItemScript item)
     {
         onClick.AddListener(delegate { OnInventoryItemClick(item); });
     }
 
-    public void OnInventoryItemClick(PickableInventoryItem item)
+    public void OnInventoryItemClick(ItemScript item)
     {
 
         if (currentInventoryItemInfoVisualization != null)
@@ -177,56 +184,57 @@ public class UIManager : MonoBehaviour
             Destroy(currentInventoryItemInfoVisualization);
         }
 
-        currentInventoryItemInfoVisualization = Instantiate(item.ItemObjectVisualizationInUI, InventoryItemInfoVisualizationObjectTransform, false);
+        currentInventoryItemInfoVisualization = Instantiate(item.ScriptableItem.ItemObjectVisualizationInUI, InventoryItemInfoVisualizationObjectTransform, false);
 
-        ReturnBottomBarButtonsToPool();
-        GameObject currentBottomBarButton;
-        if (item.ItemIsQuestItem == false)
-        {
-            currentBottomBarButton = IncrementalPools.Instance.GetObjectFromPool(PoolTypes.InventoryBottomBarButton.ToString());
-            currentBottomBarButton.GetComponentInChildren<Button>().onClick.AddListener(delegate { InventoryManager.Instance.DropItem(item); });//todo implementation
-            currentBottomBarButton.GetComponentInChildren<TextMeshProUGUI>().text = "Drop";
-            currentBottomBarButton.transform.SetParent(InventoryBottomBarButtonsContent);
-            inventoryBottomBarButtons.Add(currentBottomBarButton);
-        }
-        if (item.ItemIsEquipable)
-        {
-            if (item.ItemType == InventoryItemTypes.Apparel)
-            {
-                ApparelScriptableObject s = (ApparelScriptableObject)item;
-                InventoryItemInfoDamageOrArmor.text = "Armor:" +s.Armor;
-            }
-            else
-            {
-                WeaponScriptableObject s = (WeaponScriptableObject)item;
-               InventoryItemInfoDamageOrArmor.text = "Damage:"+s.Damage;          
-            }
 
-            currentBottomBarButton = IncrementalPools.Instance.GetObjectFromPool(PoolTypes.InventoryBottomBarButton.ToString());
-            currentBottomBarButton.GetComponentInChildren<Button>().onClick.AddListener(delegate { InventoryManager.Instance.EquipItem(item); });//todo implementation
-            currentBottomBarButton.GetComponentInChildren<TextMeshProUGUI>().text = "Equip";
-            currentBottomBarButton.transform.SetParent(InventoryBottomBarButtonsContent);
-            inventoryBottomBarButtons.Add(currentBottomBarButton);
+        if (item.ScriptableItem.ItemIsEquipable)
+        {
+            UpdateInventoryItemInfoDamageOrArmorText(item);
+
         }
         else
         {
             InventoryItemInfoDamageOrArmor.text = string.Empty;
         }
-        if (item.ItemIsUsable)
-        {
-            currentBottomBarButton = IncrementalPools.Instance.GetObjectFromPool(PoolTypes.InventoryBottomBarButton.ToString());
-            currentBottomBarButton.GetComponentInChildren<Button>().onClick.AddListener(delegate { InventoryManager.Instance.UseItem(item); });//todo implementation
-            currentBottomBarButton.GetComponentInChildren<TextMeshProUGUI>().text = item.ConsumableTextAction;
-            currentBottomBarButton.transform.SetParent(InventoryBottomBarButtonsContent);
-            inventoryBottomBarButtons.Add(currentBottomBarButton);
-        }
 
-
-        InventoryItemInfoName.text = item.ItemName;
-        InventoryItemInfoValue.text = "Value: " + item.ItemValue.ToString();
-        InventoryItemInfoWeight.text = "Weight: " + item.ItemWeight.ToString();
-        InventoryItemInfoItemText.text = item.ItemDescription;
+        InventoryItemInfoName.text = item.ScriptableItem.ItemName;
+        InventoryItemInfoValue.text = "Value: " + item.ScriptableItem.ItemValue.ToString();
+        InventoryItemInfoWeight.text = "Weight: " + item.ScriptableItem.ItemWeight.ToString();
+        InventoryItemInfoItemText.text = item.ScriptableItem.ItemDescription;
         InventoryItemInfoVisualizationPanel.SetActive(true);
+    }
+    public void RepeatedItemControlDecrease(ItemScript item)
+    {
+        if (RepeatedItemsNumberControl[item.ScriptableItem.ItemName] >= 1)
+        {
+            RepeatedItemsNumberControl[item.ScriptableItem.ItemName]--;
+        }
+    }
+
+    public void UpdateItemButtonAmount(ItemScript item)
+    {
+        GameObject pooledButton = InventoryItemsListButtonPrefabs[item.ScriptableItem.ItemName];
+        if (RepeatedItemsNumberControl[item.ScriptableItem.ItemName] == 0)
+        {
+            IncrementalPools.Instance.ReturnObjectToPool(PoolTypes.InventoryItemButton.ToString(), pooledButton);
+            InventoryItemInfoVisualizationPanel.SetActive(false);
+            return;
+        }
+        pooledButton.GetComponentInChildren<TextMeshProUGUI>().text = item.ScriptableItem.ItemName + "(" + RepeatedItemsNumberControl[item.ScriptableItem.ItemName] + ")";
+    }
+
+    public void UpdateInventoryItemInfoDamageOrArmorText(ItemScript item)
+    {
+        if (item.ScriptableItem.ItemType == InventoryItemTypes.Apparel)
+        {
+            ApparelScriptableObject s = (ApparelScriptableObject)item.ScriptableItem;
+            InventoryItemInfoDamageOrArmor.text = "Armor:" + s.Armor;
+        }
+        else
+        {
+            WeaponScriptableObject s = (WeaponScriptableObject)item.ScriptableItem;
+            InventoryItemInfoDamageOrArmor.text = "Damage:" + s.Damage;
+        }
     }
 
     public void ReturnBottomBarButtonsToPool()
@@ -238,11 +246,11 @@ public class UIManager : MonoBehaviour
         inventoryBottomBarButtons.Clear();
     }
 
-    public void TurnOnPickItemText(PickableInventoryItem item, bool canCarryTheItem)
+    public void TurnOnPickItemText(ItemScript item, bool canCarryTheItem)
     {
-        PickItemNameText.text = item.ItemName;
-        PickItemValueText.text = "Value: " + item.ItemValue.ToString();
-        PickItemWeightText.text = "Weight: " + item.ItemWeight.ToString();
+        PickItemNameText.text = item.ScriptableItem.ItemName;
+        PickItemValueText.text = "Value: " + item.ScriptableItem.ItemValue.ToString();
+        PickItemWeightText.text = "Weight: " + item.ScriptableItem.ItemWeight.ToString();
         if (canCarryTheItem)
         {
 

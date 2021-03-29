@@ -15,12 +15,19 @@ public class RaycastManager : MonoBehaviour
 
     public void Awake()
     {
-        Instance = this;
+        if (Instance != null)
+        {
+            Destroy(Instance);
+        }
+        else
+        {
+            Instance = this;
+        }
     }
 
     public bool LookForPickablesRay()
     {
-        if (Physics.Raycast(PlayerCamera.position, PlayerCamera.TransformDirection(Vector3.forward), out hit, 2, layerMask))
+        if (Physics.Raycast(PlayerCamera.position, PlayerCamera.TransformDirection(Vector3.forward), out hit, 3, layerMask))
         {
             CurrentObjectRaycasted = hit.transform.gameObject.GetComponent<ItemScript>();
             return true;
@@ -41,11 +48,11 @@ public class RaycastManager : MonoBehaviour
             if (InventoryManager.Instance.CanCarryThisNewWeight(CurrentObjectRaycasted.ScriptableItem.ItemWeight))
             {
                 InputManager.Instance.CanPickUpAnItem = true;
-                UIManager.Instance.TurnOnPickItemText(CurrentObjectRaycasted.ScriptableItem, true);
+                UIManager.Instance.TurnOnPickItemText(CurrentObjectRaycasted, true);
             }
             else
             {
-                UIManager.Instance.TurnOnPickItemText(CurrentObjectRaycasted.ScriptableItem, false);
+                UIManager.Instance.TurnOnPickItemText(CurrentObjectRaycasted, false);
             }
 
         }
