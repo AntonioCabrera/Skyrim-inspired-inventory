@@ -3,8 +3,7 @@ A project made to practice dynamic UI generation and Inventory Management from a
 
 ## Project status:  
   * Working in Unity 2019.3.15f1
-  * Needs work improving the "L" of SOLID
-  * TODO action buttons implementation
+  * Bottom bar to be implemented
   
   
 ## Current features:
@@ -13,8 +12,7 @@ A project made to practice dynamic UI generation and Inventory Management from a
 * Weight control for items to heavy to move
 * Currency system
 * Dynamic itemType and item scrollable lists
-* Dynamic action buttons for each item
-* Quest items possible
+* Quest, non consumable ingredients, keys and misc items as a possibility
 
 ## Possible paths:
 * Magic UI and user input
